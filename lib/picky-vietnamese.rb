@@ -8,28 +8,7 @@ module Picky
         #http://rishida.net/scripts/pickers/vietnamese/
         #http://vietunicode.sourceforge.net/main.html
         #ăaăâeêioôơuưy ắ ớ ố ộ ợ ệ ị ụ ỉ
-        result = [];
-        text.downcase.mb_chars.normalize(:kd).unpack('U*').map{|c|
-          case c
-            when 0..127
-              result << c
-            when 0x103 #A(
-              result << 97
-            when 0xE2 #A^
-              result << 97
-            when 0xEA #E^
-              result << 101
-            when 0xF4 #o^
-              result << 111
-            when 0x1A1 #O*
-              result << 111
-            when 0x1B0 #U*
-              result << 117
-            when 0x111 #dd
-              result << 100
-          end
-        }
-        result.pack('U*')
+        text.mb_chars.normalize(:kd).gsub(/\p{InCombining_Diacritical_Marks}+/, '').gsub(/đ/,'d').gsub(/Đ/,'D')
       end
     end
   end
